@@ -20,7 +20,9 @@ func TestHandler(t *testing.T) {
 		contentType, body  string
 	}{
 		{"page", http.MethodGet, "/", http.StatusOK, "text/html; charset=utf-8", `<script src="/app.js"`},
+		{"page swing slider", http.MethodGet, "/", http.StatusOK, "text/html; charset=utf-8", `id="swing"`},
 		{"script", http.MethodGet, "/app.js", http.StatusOK, "text/javascript; charset=utf-8", "Beat Battle web UI"},
+		{"script swing helper", http.MethodGet, "/app.js", http.StatusOK, "text/javascript; charset=utf-8", "clampSwing"},
 		{"styles", http.MethodGet, "/style.css", http.StatusOK, "text/css; charset=utf-8", "--neon"},
 		{"battles page", http.MethodGet, "/battles", http.StatusOK, "text/html; charset=utf-8", "Start a battle"},
 		{"battle page", http.MethodGet, "/battles/abc123", http.StatusOK, "text/html; charset=utf-8", `<script src="/battle.js"`},

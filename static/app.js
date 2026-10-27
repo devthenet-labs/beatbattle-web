@@ -8,6 +8,8 @@ const TRACKS = ['kick', 'snare', 'hat'];
 const STEPS = 16;
 const BPM_MIN = 60;
 const BPM_MAX = 200;
+const SWING_MIN = 0;
+const SWING_MAX = 60;
 
 function emptyTracks() {
   const tracks = {};
@@ -21,16 +23,30 @@ function clampBpm(bpm) {
   return Math.min(BPM_MAX, Math.max(BPM_MIN, n));
 }
 
+function clampSwing(swing) {
+  const n = Math.round(Number(swing));
+  if (!Number.isFinite(n)) return 0;
+  return Math.min(SWING_MAX, Math.max(SWING_MIN, n));
+}
+
 // Seconds per sixteenth-note step; matches the render service (60 / bpm / 4).
 function stepSeconds(bpm) {
   return 60 / clampBpm(bpm) / 4;
 }
 
+// How much later an odd (off-beat) step sounds, in seconds; matches the render service.
+function swingDelaySeconds(bpm, swing) {
+  return stepSeconds(bpm) * clampSwing(swing) / 100;
+}
+
 // The grid + form values as the shared pattern JSON the api and render service accept.
-function toPattern({ name, author, bpm, tracks }) {
+function toPattern({ name, author, bpm, swing, tracks }) {
   const out = {};
   for (const t of TRACKS) out[t] = Array.from({ length: STEPS }, (_, i) => Boolean(tracks[t] && tracks[t][i]));
-  return { name: String(name).trim(), author: String(author).trim(), bpm: clampBpm(bpm), swing: 0, tracks: out };
+  return {
+    name: String(name).trim(), author: String(author).trim(), bpm: clampBpm(bpm), swing: clampSwing(swing),
+    tracks: out,
+  };
 }
 
 // A pattern from the api back into editable state; tolerant of missing fields.
@@ -40,17 +56,22 @@ function fromPattern(p) {
     const src = (p && p.tracks && p.tracks[t]) || [];
     for (let i = 0; i < STEPS; i++) tracks[t][i] = src[i] === true;
   }
-  return { name: (p && p.name) || '', author: (p && p.author) || '', bpm: clampBpm(p && p.bpm), tracks };
+  return {
+    name: (p && p.name) || '', author: (p && p.author) || '', bpm: clampBpm(p && p.bpm),
+    swing: clampSwing(p && p.swing), tracks,
+  };
 }
 
 if (typeof module !== 'undefined') {
-  module.exports = { TRACKS, STEPS, emptyTracks, clampBpm, stepSeconds, toPattern, fromPattern };
+  module.exports = {
+    TRACKS, STEPS, emptyTracks, clampBpm, clampSwing, stepSeconds, swingDelaySeconds, toPattern, fromPattern,
+  };
 }
 
 // ---------- 2. DOM, audio, network ----------
 if (typeof document !== 'undefined') {
   const $ = (id) => document.getElementById(id);
-  const state = { tracks: emptyTracks(), bpm: 120 };
+  const state = { tracks: emptyTracks(), bpm: 120, swing: 0 };
   const cells = {}; // track -> [button]
   let ctx = null;
   let noise = null;
@@ -139,14 +160,23 @@ if (typeof document !== 'undefined') {
     $('bpm-out').textContent = state.bpm;
   }
 
+  function setSwing(swing) {
+    state.swing = clampSwing(swing);
+    $('swing').value = state.swing;
+    $('swing-out').textContent = state.swing;
+  }
+
   function currentPattern() {
-    return toPattern({ name: $('name').value, author: $('author').value, bpm: state.bpm, tracks: state.tracks });
+    return toPattern({
+      name: $('name').value, author: $('author').value, bpm: state.bpm, swing: state.swing, tracks: state.tracks,
+    });
   }
 
   function loadPattern(p) {
     const s = fromPattern(p);
     state.tracks = s.tracks;
     setBpm(s.bpm);
+    setSwing(s.swing);
     $('name').value = s.name;
     $('author').value = s.author;
     paintAll();
@@ -209,8 +239,9 @@ if (typeof document !== 'undefined') {
   function schedule() {
     while (nextTime < ctx.currentTime + 0.1) {
       const step = nextStep % STEPS;
-      for (const t of TRACKS) if (state.tracks[t][step]) voices[t](nextTime);
-      visual.push({ step, at: nextTime });
+      const playAt = nextTime + (step % 2 === 1 ? swingDelaySeconds(state.bpm, state.swing) : 0);
+      for (const t of TRACKS) if (state.tracks[t][step]) voices[t](playAt);
+      visual.push({ step, at: playAt });
       nextStep++;
       nextTime += stepSeconds(state.bpm);
     }
@@ -329,7 +360,9 @@ if (typeof document !== 'undefined') {
     buildGrid();
     paintAll();
     setBpm(state.bpm);
+    setSwing(state.swing);
     $('bpm').addEventListener('input', (e) => setBpm(e.target.value));
+    $('swing').addEventListener('input', (e) => setSwing(e.target.value));
     $('play').addEventListener('click', play);
     $('stop').addEventListener('click', stop);
     $('save-form').addEventListener('submit', save);
