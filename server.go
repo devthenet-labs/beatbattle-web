@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-//go:embed static/index.html static/app.js static/style.css
+//go:embed static/index.html static/app.js static/style.css static/battles.html static/battles.js static/battle.html static/battle.js
 var staticFiles embed.FS
 
 // csp is the Content-Security-Policy every response carries. There is no
@@ -53,9 +53,13 @@ func newHandler(revision string) http.Handler {
 		_ = json.NewEncoder(w).Encode(map[string]string{"status": "ok", "revision": revision})
 	})
 	routes := map[string]asset{
-		"GET /{$}":       loadAsset("index.html", "text/html; charset=utf-8"),
-		"GET /app.js":    loadAsset("app.js", "text/javascript; charset=utf-8"),
-		"GET /style.css": loadAsset("style.css", "text/css; charset=utf-8"),
+		"GET /{$}":          loadAsset("index.html", "text/html; charset=utf-8"),
+		"GET /app.js":       loadAsset("app.js", "text/javascript; charset=utf-8"),
+		"GET /style.css":    loadAsset("style.css", "text/css; charset=utf-8"),
+		"GET /battles":      loadAsset("battles.html", "text/html; charset=utf-8"),
+		"GET /battles/{id}": loadAsset("battle.html", "text/html; charset=utf-8"),
+		"GET /battles.js":   loadAsset("battles.js", "text/javascript; charset=utf-8"),
+		"GET /battle.js":    loadAsset("battle.js", "text/javascript; charset=utf-8"),
 	}
 	for pattern, a := range routes {
 		mux.HandleFunc(pattern, a.serve)

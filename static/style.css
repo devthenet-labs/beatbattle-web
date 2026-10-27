@@ -105,9 +105,16 @@ ol.list li::before { counter-increment: rank; content: counter(rank) "."; color:
 .vote { background: none; border: 1px solid var(--neon); border-radius: 8px; padding: 4px 8px; cursor: pointer; }
 .empty { opacity: .6; }
 
+.versus { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.side { display: grid; gap: 8px; align-content: start; }
+.side h2 { margin: 0; }
+.score { margin: 0; font-size: 1.6rem; font-weight: 700; color: var(--neon); text-shadow: 0 0 10px var(--neon); }
+.ahead { margin: 12px 0 0; text-align: center; color: var(--lime); text-shadow: 0 0 8px var(--lime); }
+
 @media (max-width: 480px) {
   .row { grid-template-columns: 2.6rem 1fr; gap: 4px; }
   .steps { gap: 2px; }
   .step:nth-child(4n+1) { margin-left: 2px; }
   .panel { padding: 10px; }
+  .versus { grid-template-columns: 1fr; }
 }

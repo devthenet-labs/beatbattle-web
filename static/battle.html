@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Beat Battle — Battle</title>
+<link rel="stylesheet" href="/style.css">
+<script src="/battle.js" defer></script>
+</head>
+<body>
+<header class="top">
+  <h1>BEAT<span>BATTLE</span></h1>
+  <p class="tag"><a href="/battles">Back to battles</a></p>
+</header>
+
+<main>
+  <section class="panel" aria-label="Battle">
+    <p id="error" class="error" role="alert" hidden></p>
+
+    <div class="versus">
+      <article class="panel side" data-side="a">
+        <h2 id="name-a"></h2>
+        <p id="meta-a" class="meta"></p>
+        <button id="play-a" class="btn" type="button">▶ Play</button>
+        <button id="vote-a" class="btn go" type="button">🔥 Vote</button>
+        <p id="score-a" class="score"></p>
+      </article>
+      <article class="panel side" data-side="b">
+        <h2 id="name-b"></h2>
+        <p id="meta-b" class="meta"></p>
+        <button id="play-b" class="btn" type="button">▶ Play</button>
+        <button id="vote-b" class="btn go" type="button">🔥 Vote</button>
+        <p id="score-b" class="score"></p>
+      </article>
+    </div>
+
+    <p id="ahead" class="ahead"></p>
+  </section>
+</main>
+</body>
+</html>

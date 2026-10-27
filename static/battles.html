@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Beat Battle — Battles</title>
+<link rel="stylesheet" href="/style.css">
+<script src="/battles.js" defer></script>
+</head>
+<body>
+<header class="top">
+  <h1>BEAT<span>BATTLE</span></h1>
+  <p class="tag">Two beats. One winner. <a href="/">Back to the sequencer</a></p>
+</header>
+
+<main>
+  <section class="panel" aria-label="Start a battle">
+    <h2>Start a battle</h2>
+    <form id="start-form" class="save" autocomplete="off">
+      <select id="pattern-a" aria-label="First beat" required></select>
+      <select id="pattern-b" aria-label="Second beat" required></select>
+      <button class="btn go" type="submit">Start battle</button>
+    </form>
+
+    <p id="error" class="error" role="alert" hidden></p>
+  </section>
+
+  <section class="panel" aria-label="Battles">
+    <h2>Battles</h2>
+    <ol id="battles" class="list"></ol>
+  </section>
+</main>
+</body>
+</html>
