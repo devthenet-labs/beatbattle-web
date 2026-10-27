@@ -21,18 +21,28 @@ The shared contract is `SPEC.md` in the parent `beatbattle` directory.
 
 ## What this service does
 
-| Route         | Answer                                                       |
-| ------------- | ------------------------------------------------------------ |
-| `/`           | `index.html`                                                 |
-| `/app.js`     | the UI script                                                |
-| `/style.css`  | the stylesheet                                               |
-| `/healthz`    | `{"status":"ok","revision":"<sha>"}`                         |
-| anything else | 404                                                          |
+| Route            | Answer                                                    |
+| ---------------- | ---------------------------------------------------------- |
+| `/`              | `index.html`                                                |
+| `/app.js`        | the UI script                                               |
+| `/style.css`     | the stylesheet                                              |
+| `/battles`       | `battles.html`, the battles list and start-battle form      |
+| `/battles/{id}`  | `battle.html`, one battle's head-to-head page               |
+| `/battles.js`    | the battles list/start-form script                          |
+| `/battle.js`     | the head-to-head page's script                              |
+| `/healthz`       | `{"status":"ok","revision":"<sha>"}`                        |
+| anything else    | 404                                                          |
 
 Every response carries a strict CSP (`default-src 'self'; connect-src 'self'; media-src 'self' blob:; img-src 'self'
 data:; style-src 'self'; script-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'`), so the
 page has no inline script or style. The UI calls `/api/...` (save, list, vote, leaderboard) and `/render/wav`
 same-origin. `ADDR` overrides the listen address (default `:8080`).
+
+`/battles` lets two saved patterns face off: pick two, start a battle, and see the running list of battles with
+their scores. `/battles/{id}` is one battle: both beats playable side by side, a vote button under each, and the
+running score. Both pages call the same-origin `beatbattle-api` `/api/battles...` endpoints documented in that
+repository's README; voting on a battle side also adds one vote to that pattern's normal vote count, so it also
+rises on the main leaderboard.
 
 `app.js` keeps its pure helpers (pattern to JSON and back, step timing) in a first section with no DOM access;
 `node -e 'require("./static/app.js")'` loads them.

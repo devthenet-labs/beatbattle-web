@@ -22,6 +22,10 @@ func TestHandler(t *testing.T) {
 		{"page", http.MethodGet, "/", http.StatusOK, "text/html; charset=utf-8", `<script src="/app.js"`},
 		{"script", http.MethodGet, "/app.js", http.StatusOK, "text/javascript; charset=utf-8", "Beat Battle web UI"},
 		{"styles", http.MethodGet, "/style.css", http.StatusOK, "text/css; charset=utf-8", "--neon"},
+		{"battles page", http.MethodGet, "/battles", http.StatusOK, "text/html; charset=utf-8", "Start a battle"},
+		{"battle page", http.MethodGet, "/battles/abc123", http.StatusOK, "text/html; charset=utf-8", `<script src="/battle.js"`},
+		{"battles script", http.MethodGet, "/battles.js", http.StatusOK, "text/javascript; charset=utf-8", "Beat Battle battles list"},
+		{"battle script", http.MethodGet, "/battle.js", http.StatusOK, "text/javascript; charset=utf-8", "Beat Battle head-to-head"},
 		{"readiness", http.MethodGet, "/healthz", http.StatusOK, "application/json", `"status":"ok"`},
 		{"unknown path", http.MethodGet, "/missing", http.StatusNotFound, "", ""},
 		{"embedded dir not exposed", http.MethodGet, "/static/app.js", http.StatusNotFound, "", ""},
@@ -79,23 +83,27 @@ func TestAssetsAreCacheable(t *testing.T) {
 	}
 }
 
-// TestNoInlineScriptOrStyle guards the CSP: the page may not rely on inline code.
+// TestNoInlineScriptOrStyle guards the CSP: no page may rely on inline code.
 func TestNoInlineScriptOrStyle(t *testing.T) {
-	rec := httptest.NewRecorder()
-	newHandler("x").ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/", nil))
-	page := rec.Body.String()
-	for _, tag := range regexp.MustCompile(`(?i)<script[^>]*>`).FindAllString(page, -1) {
-		if !strings.Contains(tag, " src=") {
-			t.Errorf("inline script tag: %s", tag)
-		}
-	}
-	for name, re := range map[string]*regexp.Regexp{
-		"style element": regexp.MustCompile(`(?i)<style`),
-		"style attr":    regexp.MustCompile(`(?i)\sstyle=`),
-		"event handler": regexp.MustCompile(`(?i)\son[a-z]+=`),
-	} {
-		if re.MatchString(page) {
-			t.Errorf("index.html contains an %s", name)
-		}
+	for _, path := range []string{"/", "/battles", "/battles/x"} {
+		t.Run(path, func(t *testing.T) {
+			rec := httptest.NewRecorder()
+			newHandler("x").ServeHTTP(rec, httptest.NewRequest(http.MethodGet, path, nil))
+			page := rec.Body.String()
+			for _, tag := range regexp.MustCompile(`(?i)<script[^>]*>`).FindAllString(page, -1) {
+				if !strings.Contains(tag, " src=") {
+					t.Errorf("inline script tag: %s", tag)
+				}
+			}
+			for name, re := range map[string]*regexp.Regexp{
+				"style element": regexp.MustCompile(`(?i)<style`),
+				"style attr":    regexp.MustCompile(`(?i)\sstyle=`),
+				"event handler": regexp.MustCompile(`(?i)\son[a-z]+=`),
+			} {
+				if re.MatchString(page) {
+					t.Errorf("%s contains an %s", path, name)
+				}
+			}
+		})
 	}
 }
