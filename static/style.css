@@ -90,6 +90,7 @@ main { max-width: 860px; margin: 0 auto; padding: 12px; display: grid; gap: 14px
 .btn.alt { color: var(--neon); border-color: var(--neon); box-shadow: 0 0 8px #ff2bd655; }
 .btn:disabled { opacity: .5; cursor: wait; }
 
+#remix-of { margin: 10px 0 0; opacity: .8; }
 .error { margin: 10px 0 0; padding: 8px 10px; border: 1px solid #ff4d6d; border-radius: 8px; color: #ff9aae; background: #3a0d1c; }
 .error[hidden], .render-out[hidden] { display: none; }
 .render-out { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 12px; }
@@ -103,6 +104,7 @@ ol.list li::before { counter-increment: rank; content: counter(rank) "."; color:
 .list .meta { opacity: .6; font-size: .85rem; }
 .list .votes { color: var(--neon); font-weight: 700; min-width: 2rem; text-align: right; }
 .vote { background: none; border: 1px solid var(--neon); border-radius: 8px; padding: 4px 8px; cursor: pointer; }
+.remix { background: none; border: 1px solid var(--cyan); border-radius: 8px; padding: 4px 8px; cursor: pointer; color: var(--cyan); }
 .empty { opacity: .6; }
 
 .versus { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
