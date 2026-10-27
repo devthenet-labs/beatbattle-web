@@ -71,7 +71,7 @@ if (typeof module !== 'undefined') {
 // ---------- 2. DOM, audio, network ----------
 if (typeof document !== 'undefined') {
   const $ = (id) => document.getElementById(id);
-  const state = { tracks: emptyTracks(), bpm: 120, swing: 0 };
+  const state = { tracks: emptyTracks(), bpm: 120, swing: 0, remixOf: null };
   const cells = {}; // track -> [button]
   let ctx = null;
   let noise = null;
@@ -172,7 +172,14 @@ if (typeof document !== 'undefined') {
     });
   }
 
-  function loadPattern(p) {
+  function setRemixOf(info) {
+    state.remixOf = info;
+    const el = $('remix-of');
+    el.textContent = info ? 'Remixed from ' + info.name : '';
+    el.hidden = !info;
+  }
+
+  function loadPattern(p, remixOf = null) {
     const s = fromPattern(p);
     state.tracks = s.tracks;
     setBpm(s.bpm);
@@ -180,6 +187,7 @@ if (typeof document !== 'undefined') {
     $('name').value = s.name;
     $('author').value = s.author;
     paintAll();
+    setRemixOf(remixOf);
   }
 
   // ----- WebAudio voices -----
@@ -303,7 +311,14 @@ if (typeof document !== 'undefined') {
     votes.className = 'votes';
     votes.textContent = '🔥 ' + p.votes;
     load.addEventListener('click', () => loadPattern(p));
-    li.append(load, meta, votes);
+    const remix = document.createElement('button');
+    remix.type = 'button';
+    remix.className = 'remix';
+    remix.title = 'Load as a remix';
+    remix.textContent = 'Remix';
+    remix.setAttribute('aria-label', 'Remix ' + p.name);
+    remix.addEventListener('click', () => loadPattern(p, { id: p.id, name: p.name }));
+    li.append(load, remix, meta, votes);
     if (withVote) {
       const v = document.createElement('button');
       v.type = 'button';
@@ -336,7 +351,14 @@ if (typeof document !== 'undefined') {
   async function save(ev) {
     ev.preventDefault();
     await guarded(async () => {
-      await call('POST', '/api/patterns', currentPattern());
+      if (state.remixOf) {
+        await call('POST', '/api/patterns/' + encodeURIComponent(state.remixOf.id) + '/remix', {
+          name: $('name').value.trim(), author: $('author').value.trim(),
+        });
+      } else {
+        await call('POST', '/api/patterns', currentPattern());
+      }
+      setRemixOf(null);
       await refresh();
     });
   }
