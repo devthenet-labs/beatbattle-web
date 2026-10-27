@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Beat Battle</title>
+<link rel="stylesheet" href="/style.css">
+<script src="/app.js" defer></script>
+</head>
+<body>
+<header class="top">
+  <h1>BEAT<span>BATTLE</span></h1>
+  <p class="tag">Build a beat. Save it. Get the 🔥.</p>
+</header>
+
+<main>
+  <section class="panel machine" aria-label="Sequencer">
+    <div id="grid" class="grid" role="group" aria-label="Step grid"></div>
+
+    <div class="controls">
+      <button id="play" class="btn go" type="button">▶ Play</button>
+      <button id="stop" class="btn" type="button">■ Stop</button>
+      <label class="bpm">BPM <output id="bpm-out">120</output>
+        <input id="bpm" type="range" min="60" max="200" value="120">
+      </label>
+    </div>
+
+    <form id="save-form" class="save" autocomplete="off">
+      <input id="name" type="text" maxlength="40" placeholder="Beat name" aria-label="Beat name" required>
+      <input id="author" type="text" maxlength="24" placeholder="Your handle" aria-label="Author"
+             pattern="[A-Za-z0-9_\-]{1,24}" required>
+      <button class="btn" type="submit">Save</button>
+      <button id="render" class="btn alt" type="button">Render WAV</button>
+    </form>
+
+    <p id="error" class="error" role="alert" hidden></p>
+
+    <div id="render-out" class="render-out" hidden>
+      <audio id="audio" controls></audio>
+      <a id="download" class="btn" download="beat.wav">Download WAV</a>
+    </div>
+  </section>
+
+  <section class="panel" aria-label="Fresh beats">
+    <h2>Fresh beats</h2>
+    <ul id="fresh" class="list"></ul>
+  </section>
+
+  <section class="panel" aria-label="Leaderboard">
+    <h2>Leaderboard</h2>
+    <ol id="board" class="list"></ol>
+  </section>
+</main>
+</body>
+</html>
