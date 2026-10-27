@@ -23,6 +23,8 @@ func TestHandler(t *testing.T) {
 		{"script", http.MethodGet, "/app.js", http.StatusOK, "text/javascript; charset=utf-8", "Beat Battle web UI"},
 		{"styles", http.MethodGet, "/style.css", http.StatusOK, "text/css; charset=utf-8", "--neon"},
 		{"readiness", http.MethodGet, "/healthz", http.StatusOK, "application/json", `"status":"ok"`},
+		{"favicon svg", http.MethodGet, "/favicon.svg", http.StatusOK, "image/svg+xml", "<svg"},
+		{"favicon ico", http.MethodGet, "/favicon.ico", http.StatusOK, "image/svg+xml", "<svg"},
 		{"unknown path", http.MethodGet, "/missing", http.StatusNotFound, "", ""},
 		{"embedded dir not exposed", http.MethodGet, "/static/app.js", http.StatusNotFound, "", ""},
 		{"wrong method", http.MethodPost, "/", http.StatusMethodNotAllowed, "", ""},

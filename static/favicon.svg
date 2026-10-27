@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Beat Battle">
+  <rect width="64" height="64" rx="14" fill="#0a0618"/>
+  <ellipse cx="32" cy="24" rx="19" ry="8" fill="none" stroke="#19f3ff" stroke-width="4"/>
+  <path d="M13 24v16c0 6 8.5 10 19 10s19-4 19-10V24" fill="none" stroke="#ff2bd6" stroke-width="4"
+        stroke-linecap="round"/>
+  <path d="M22 10 L16 2" stroke="#b6ff2b" stroke-width="3" stroke-linecap="round"/>
+  <path d="M42 10 L48 2" stroke="#b6ff2b" stroke-width="3" stroke-linecap="round"/>
+</svg>

@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-//go:embed static/index.html static/app.js static/style.css
+//go:embed static/index.html static/app.js static/style.css static/favicon.svg
 var staticFiles embed.FS
 
 // csp is the Content-Security-Policy every response carries. There is no
@@ -52,10 +52,13 @@ func newHandler(revision string) http.Handler {
 		w.Header().Set("Cache-Control", "no-store")
 		_ = json.NewEncoder(w).Encode(map[string]string{"status": "ok", "revision": revision})
 	})
+	favicon := loadAsset("favicon.svg", "image/svg+xml")
 	routes := map[string]asset{
-		"GET /{$}":       loadAsset("index.html", "text/html; charset=utf-8"),
-		"GET /app.js":    loadAsset("app.js", "text/javascript; charset=utf-8"),
-		"GET /style.css": loadAsset("style.css", "text/css; charset=utf-8"),
+		"GET /{$}":         loadAsset("index.html", "text/html; charset=utf-8"),
+		"GET /app.js":      loadAsset("app.js", "text/javascript; charset=utf-8"),
+		"GET /style.css":   loadAsset("style.css", "text/css; charset=utf-8"),
+		"GET /favicon.svg": favicon,
+		"GET /favicon.ico": favicon,
 	}
 	for pattern, a := range routes {
 		mux.HandleFunc(pattern, a.serve)

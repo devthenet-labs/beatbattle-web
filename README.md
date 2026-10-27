@@ -1,9 +1,9 @@
 # beatbattle-web
 
 The browser UI of **Beat Battle**, a multiplayer step-sequencer jam. It is a stdlib-only Go server that embeds
-`static/index.html`, `static/app.js` and `static/style.css` (plain JS, no build step, no npm) and serves them on
-port 8080. It was scaffolded by `maul init app` so that [maul](https://github.com/devthenet-labs/maul) can build
-intents in it and preview its pull requests.
+`static/index.html`, `static/app.js`, `static/style.css` and `static/favicon.svg` (plain JS, no build step, no npm)
+and serves them on port 8080. It was scaffolded by `maul init app` so that [maul](https://github.com/devthenet-labs/maul)
+can build intents in it and preview its pull requests.
 
 ## Beat Battle
 
@@ -26,6 +26,8 @@ The shared contract is `SPEC.md` in the parent `beatbattle` directory.
 | `/`           | `index.html`                                                 |
 | `/app.js`     | the UI script                                                |
 | `/style.css`  | the stylesheet                                               |
+| `/favicon.svg` | the icon                                                    |
+| `/favicon.ico` | the same icon, so the browser's automatic probe isn't a 404 |
 | `/healthz`    | `{"status":"ok","revision":"<sha>"}`                         |
 | anything else | 404                                                          |
 
