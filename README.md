@@ -1,8 +1,41 @@
 # beatbattle-web
 
-A small Go HTTP service, scaffolded by `maul init app` so that [maul](https://github.com/devthenet-labs/maul) can
-build intents in it and preview its pull requests. It listens on port 8080, answers `/healthz` once it is
-ready and writes nothing to disk.
+The browser UI of **Beat Battle**, a multiplayer step-sequencer jam. It is a stdlib-only Go server that embeds
+`static/index.html`, `static/app.js` and `static/style.css` (plain JS, no build step, no npm) and serves them on
+port 8080. It was scaffolded by `maul init app` so that [maul](https://github.com/devthenet-labs/maul) can build
+intents in it and preview its pull requests.
+
+## Beat Battle
+
+People build 16-step drum patterns (kick, snare, hat), save them, vote on each other's patterns and render them to
+WAV. Three repositories share one preview host, split by path prefix with no rewriting; only the browser composes
+them, same-origin:
+
+| Repository          | Prefix    | Readiness         | Role                                                          |
+| ------------------- | --------- | ----------------- | ------------------------------------------------------------- |
+| `beatbattle-web`    | `/`       | `/healthz`        | this repo: the UI, WebAudio playback, browsing, voting        |
+| `beatbattle-api`    | `/api`    | `/api/healthz`    | patterns, votes, leaderboard, render requests (in-memory)     |
+| `beatbattle-render` | `/render` | `/render/healthz` | deterministic drum synth, `POST /render/wav`                  |
+
+The shared contract is `SPEC.md` in the parent `beatbattle` directory.
+
+## What this service does
+
+| Route         | Answer                                                       |
+| ------------- | ------------------------------------------------------------ |
+| `/`           | `index.html`                                                 |
+| `/app.js`     | the UI script                                                |
+| `/style.css`  | the stylesheet                                               |
+| `/healthz`    | `{"status":"ok","revision":"<sha>"}`                         |
+| anything else | 404                                                          |
+
+Every response carries a strict CSP (`default-src 'self'; connect-src 'self'; media-src 'self' blob:; img-src 'self'
+data:; style-src 'self'; script-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'`), so the
+page has no inline script or style. The UI calls `/api/...` (save, list, vote, leaderboard) and `/render/wav`
+same-origin. `ADDR` overrides the listen address (default `:8080`).
+
+`app.js` keeps its pure helpers (pattern to JSON and back, step timing) in a first section with no DOM access;
+`node -e 'require("./static/app.js")'` loads them.
 
 ## Develop
 

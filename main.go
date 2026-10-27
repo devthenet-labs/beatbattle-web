@@ -15,13 +15,17 @@ import (
 	"time"
 )
 
-// addr is the one port the runtime image exposes.
-const addr = ":8080"
+// defaultAddr is the one port the runtime image exposes; ADDR overrides it for local runs.
+const defaultAddr = ":8080"
 
 // commitSHA is set at build time (-ldflags -X main.commitSHA=...).
 var commitSHA = "dev"
 
 func main() {
+	addr := defaultAddr
+	if v := os.Getenv("ADDR"); v != "" {
+		addr = v
+	}
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 	server := &http.Server{

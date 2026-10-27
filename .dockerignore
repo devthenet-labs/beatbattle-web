@@ -6,3 +6,7 @@
 !go.mod
 !go.sum
 !**/*.go
+# The UI that go:embed compiles in.
+!static/index.html
+!static/app.js
+!static/style.css
