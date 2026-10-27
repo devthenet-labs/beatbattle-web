@@ -88,8 +88,24 @@ if (typeof document !== 'undefined') {
     el.hidden = !msg;
   }
 
+  // A stable id for this browser, sent as X-Client-Id so the api can
+  // rate-limit votes per client; kept in localStorage across reloads.
+  function clientId() {
+    const KEY = 'bb-client-id';
+    try {
+      let id = localStorage.getItem(KEY);
+      if (!id) {
+        id = (crypto.randomUUID && crypto.randomUUID()) || (Math.random().toString(36).slice(2) + Date.now().toString(36));
+        localStorage.setItem(KEY, id);
+      }
+      return id;
+    } catch (_) {
+      return '';
+    }
+  }
+
   async function call(method, url, body) {
-    const opts = { method, headers: {} };
+    const opts = { method, headers: { 'X-Client-Id': clientId() } };
     if (body !== undefined) {
       opts.headers['Content-Type'] = 'application/json';
       opts.body = JSON.stringify(body);
@@ -102,7 +118,14 @@ if (typeof document !== 'undefined') {
     }
     if (!res.ok) {
       let msg = res.status + ' ' + res.statusText;
-      try { const j = await res.json(); if (j && j.error) msg = j.error; } catch (_) { /* not JSON */ }
+      if (res.status === 429) {
+        const retryAfter = res.headers.get('Retry-After');
+        msg = retryAfter
+          ? 'Too many votes - wait ' + retryAfter + 's and try again.'
+          : 'Too many votes - try again shortly.';
+      } else {
+        try { const j = await res.json(); if (j && j.error) msg = j.error; } catch (_) { /* not JSON */ }
+      }
       throw new Error(msg);
     }
     return res;
