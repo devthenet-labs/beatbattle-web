@@ -28,6 +28,8 @@ func TestHandler(t *testing.T) {
 		{"battle page", http.MethodGet, "/battles/abc123", http.StatusOK, "text/html; charset=utf-8", `<script src="/battle.js"`},
 		{"battles script", http.MethodGet, "/battles.js", http.StatusOK, "text/javascript; charset=utf-8", "Beat Battle battles list"},
 		{"battle script", http.MethodGet, "/battle.js", http.StatusOK, "text/javascript; charset=utf-8", "Beat Battle head-to-head"},
+		{"beat page", http.MethodGet, "/beat/abc123", http.StatusOK, "text/html; charset=utf-8", `<script src="/beat.js"`},
+		{"beat script", http.MethodGet, "/beat.js", http.StatusOK, "text/javascript; charset=utf-8", "Beat Battle beat page"},
 		{"readiness", http.MethodGet, "/healthz", http.StatusOK, "application/json", `"status":"ok"`},
 		{"unknown path", http.MethodGet, "/missing", http.StatusNotFound, "", ""},
 		{"embedded dir not exposed", http.MethodGet, "/static/app.js", http.StatusNotFound, "", ""},
@@ -87,7 +89,7 @@ func TestAssetsAreCacheable(t *testing.T) {
 
 // TestNoInlineScriptOrStyle guards the CSP: no page may rely on inline code.
 func TestNoInlineScriptOrStyle(t *testing.T) {
-	for _, path := range []string{"/", "/battles", "/battles/x"} {
+	for _, path := range []string{"/", "/battles", "/battles/x", "/beat/x"} {
 		t.Run(path, func(t *testing.T) {
 			rec := httptest.NewRecorder()
 			newHandler("x").ServeHTTP(rec, httptest.NewRequest(http.MethodGet, path, nil))

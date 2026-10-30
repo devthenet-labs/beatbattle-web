@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-//go:embed static/index.html static/app.js static/style.css static/battles.html static/battles.js static/battle.html static/battle.js
+//go:embed static/index.html static/app.js static/style.css static/battles.html static/battles.js static/battle.html static/battle.js static/beat.html static/beat.js
 var staticFiles embed.FS
 
 // csp is the Content-Security-Policy every response carries. There is no
@@ -60,6 +60,8 @@ func newHandler(revision string) http.Handler {
 		"GET /battles/{id}": loadAsset("battle.html", "text/html; charset=utf-8"),
 		"GET /battles.js":   loadAsset("battles.js", "text/javascript; charset=utf-8"),
 		"GET /battle.js":    loadAsset("battle.js", "text/javascript; charset=utf-8"),
+		"GET /beat/{id}":    loadAsset("beat.html", "text/html; charset=utf-8"),
+		"GET /beat.js":      loadAsset("beat.js", "text/javascript; charset=utf-8"),
 	}
 	for pattern, a := range routes {
 		mux.HandleFunc(pattern, a.serve)
