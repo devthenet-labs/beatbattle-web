@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Beat Battle — Beat</title>
+<link rel="stylesheet" href="/style.css">
+<script src="/beat.js" defer></script>
+</head>
+<body>
+<header class="top">
+  <h1>BEAT<span>BATTLE</span></h1>
+  <p class="tag"><a href="/">Back to beats</a></p>
+</header>
+
+<main>
+  <p id="error" class="error" role="alert" hidden></p>
+  <p id="not-found" class="meta" hidden>Beat not found</p>
+
+  <section id="content" class="panel" aria-label="Beat" hidden>
+    <h2 id="name"></h2>
+    <p id="meta" class="meta"></p>
+    <p id="score" class="meta"></p>
+    <p id="record" class="meta"></p>
+    <div id="grid" class="grid" role="group" aria-label="Step grid"></div>
+  </section>
+</main>
+</body>
+</html>

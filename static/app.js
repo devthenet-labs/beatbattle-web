@@ -341,7 +341,12 @@ if (typeof document !== 'undefined') {
     remix.textContent = 'Remix';
     remix.setAttribute('aria-label', 'Remix ' + p.name);
     remix.addEventListener('click', () => loadPattern(p, { id: p.id, name: p.name }));
-    li.append(load, remix, meta, votes);
+    const page = document.createElement('a');
+    page.className = 'remix';
+    page.href = '/beat/' + encodeURIComponent(p.id);
+    page.textContent = 'Page';
+    page.setAttribute('aria-label', 'View page for ' + p.name);
+    li.append(load, remix, page, meta, votes);
     if (withVote) {
       const v = document.createElement('button');
       v.type = 'button';
