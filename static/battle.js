@@ -17,8 +17,12 @@ function aheadText(b) {
   return (b.votesA > b.votesB ? b.patternA.name : b.patternB.name) + ' leads';
 }
 
+function stakeText(points) {
+  return '+' + points + ' if this wins';
+}
+
 if (typeof module !== 'undefined') {
-  module.exports = { stepSeconds, aheadText };
+  module.exports = { stepSeconds, aheadText, stakeText };
 }
 
 // ---------- 2. DOM, audio, network ----------
@@ -184,6 +188,8 @@ if (typeof document !== 'undefined') {
   function render() {
     renderSide('a', battle.patternA);
     renderSide('b', battle.patternB);
+    $('stake-a').textContent = stakeText(battle.stakes.a);
+    $('stake-b').textContent = stakeText(battle.stakes.b);
     $('score-a').textContent = String(battle.votesA);
     $('score-b').textContent = String(battle.votesB);
     $('ahead').textContent = aheadText(battle);
