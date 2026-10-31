@@ -37,17 +37,21 @@ main { max-width: 860px; margin: 0 auto; padding: 12px; display: grid; gap: 14px
   box-shadow: 0 0 24px #2b1d5788;
 }
 
-.grid { display: grid; gap: 6px; }
-.row { display: grid; grid-template-columns: 3.4rem 1fr; align-items: center; gap: 8px; }
-.row-label { font-size: .75rem; text-transform: uppercase; letter-spacing: .1em; opacity: .85; }
-.steps { display: grid; grid-template-columns: repeat(16, 1fr); gap: 3px; }
+.grid { display: grid; grid-template-columns: max-content minmax(0, 1fr); align-items: start; gap: 6px 10px; }
+.row-labels { display: grid; gap: 6px; }
+.row-label { height: 48px; display: flex; align-items: center; font-size: .75rem; text-transform: uppercase; letter-spacing: .1em; opacity: .85; }
+.steps-scroll { min-width: 0; }
+.steps-body { display: grid; gap: 6px; min-width: 0; }
+.steps { display: grid; grid-template-columns: repeat(16, 48px); gap: 3px; overflow-x: auto; overflow-y: hidden; }
 .step {
-  aspect-ratio: 1;
-  min-width: 0;
+  width: 48px;
+  height: 30px;
+  min-width: 48px;
+  min-height: 30px;
   padding: 0;
   background: #1d1240;
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
 }
 .step.group-odd { background: #26175a; }
@@ -56,9 +60,9 @@ main { max-width: 860px; margin: 0 auto; padding: 12px; display: grid; gap: 14px
 .step.on { background: var(--c); border-color: var(--c); box-shadow: 0 0 10px var(--c); }
 .step.playhead { outline: 2px solid #fff; outline-offset: 1px; }
 .step:focus-visible { outline: 2px solid #fff; }
-.row[data-track="kick"] { --c: var(--kick); }
-.row[data-track="snare"] { --c: var(--snare); }
-.row[data-track="hat"] { --c: var(--hat); }
+.steps[data-track="kick"] { --c: var(--kick); }
+.steps[data-track="snare"] { --c: var(--snare); }
+.steps[data-track="hat"] { --c: var(--hat); }
 
 .controls, .save { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 12px; }
 .bpm { display: flex; align-items: center; gap: 8px; flex: 1 1 200px; }
@@ -114,9 +118,6 @@ ol.list li::before { counter-increment: rank; content: counter(rank) "."; color:
 .ahead { margin: 12px 0 0; text-align: center; color: var(--lime); text-shadow: 0 0 8px var(--lime); }
 
 @media (max-width: 480px) {
-  .row { grid-template-columns: 2.6rem 1fr; gap: 4px; }
-  .steps { gap: 2px; }
-  .step:nth-child(4n+1) { margin-left: 2px; }
   .panel { padding: 10px; }
   .versus { grid-template-columns: 1fr; }
 }
