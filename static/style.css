@@ -40,14 +40,14 @@ main { max-width: 860px; margin: 0 auto; padding: 12px; display: grid; gap: 14px
 .grid { display: grid; grid-template-columns: max-content minmax(0, 1fr); align-items: start; gap: 6px 10px; }
 .row-labels { display: grid; gap: 6px; }
 .row-label { height: 48px; display: flex; align-items: center; font-size: .75rem; text-transform: uppercase; letter-spacing: .1em; opacity: .85; }
-.steps-scroll { overflow-x: auto; overflow-y: hidden; min-width: 0; -webkit-overflow-scrolling: touch; }
-.steps-body { display: grid; gap: 6px; width: max-content; }
-.steps { display: grid; grid-template-columns: repeat(16, 48px); gap: 3px; }
+.steps-scroll { min-width: 0; }
+.steps-body { display: grid; gap: 6px; min-width: 0; }
+.steps { display: grid; grid-template-columns: repeat(16, 48px); gap: 3px; overflow-x: auto; overflow-y: hidden; }
 .step {
   width: 48px;
-  height: 48px;
+  height: 30px;
   min-width: 48px;
-  min-height: 48px;
+  min-height: 30px;
   padding: 0;
   background: #1d1240;
   border: 1px solid var(--line);
