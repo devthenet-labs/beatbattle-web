@@ -29,6 +29,7 @@ func TestHandler(t *testing.T) {
 		{"battles script", http.MethodGet, "/battles.js", http.StatusOK, "text/javascript; charset=utf-8", "Beat Battle battles list"},
 		{"battle script", http.MethodGet, "/battle.js", http.StatusOK, "text/javascript; charset=utf-8", "Beat Battle head-to-head"},
 		{"beat page", http.MethodGet, "/beat/abc123", http.StatusOK, "text/html; charset=utf-8", `<script src="/beat.js"`},
+		{"beat page shows description slot", http.MethodGet, "/beat/abc123", http.StatusOK, "text/html; charset=utf-8", `id="description"`},
 		{"beat script", http.MethodGet, "/beat.js", http.StatusOK, "text/javascript; charset=utf-8", "Beat Battle beat page"},
 		{"beat script shows length", http.MethodGet, "/beat.js", http.StatusOK, "text/javascript; charset=utf-8", "lengthText"},
 		{"readiness", http.MethodGet, "/healthz", http.StatusOK, "application/json", `"status":"ok"`},
