@@ -30,6 +30,7 @@ func TestHandler(t *testing.T) {
 		{"battle script", http.MethodGet, "/battle.js", http.StatusOK, "text/javascript; charset=utf-8", "Beat Battle head-to-head"},
 		{"beat page", http.MethodGet, "/beat/abc123", http.StatusOK, "text/html; charset=utf-8", `<script src="/beat.js"`},
 		{"beat script", http.MethodGet, "/beat.js", http.StatusOK, "text/javascript; charset=utf-8", "Beat Battle beat page"},
+		{"beat script shows length", http.MethodGet, "/beat.js", http.StatusOK, "text/javascript; charset=utf-8", "lengthText"},
 		{"readiness", http.MethodGet, "/healthz", http.StatusOK, "application/json", `"status":"ok"`},
 		{"unknown path", http.MethodGet, "/missing", http.StatusNotFound, "", ""},
 		{"embedded dir not exposed", http.MethodGet, "/static/app.js", http.StatusNotFound, "", ""},

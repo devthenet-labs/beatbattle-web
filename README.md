@@ -46,9 +46,9 @@ running score. Both pages call the same-origin `beatbattle-api` `/api/battles...
 repository's README; voting on a battle side also adds one vote to that pattern's normal vote count, so it also
 rises on the main leaderboard.
 
-`/beat/{id}` shows one beat's name, author, bpm, swing, score and battle record, plus its 16-step grid read only (no
-play/vote controls). It calls the same-origin `GET /api/patterns/{id}` and `GET /api/patterns/{id}/record` endpoints
-documented in the api repository's README.
+`/beat/{id}` shows one beat's name, author, bpm (with its length next to it, e.g. "2.0 s"), swing, score and battle
+record, plus its 16-step grid read only (no play/vote controls). It calls the same-origin `GET /api/patterns/{id}`
+and `GET /api/patterns/{id}/record` endpoints documented in the api repository's README.
 
 `app.js` keeps its pure helpers (pattern to JSON and back, step timing) in a first section with no DOM access;
 `node -e 'require("./static/app.js")'` loads them.
