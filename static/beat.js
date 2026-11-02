@@ -15,8 +15,12 @@ function recordText(r) {
   return plural(r.wins, 'win', 'wins') + ', ' + plural(r.losses, 'loss', 'losses');
 }
 
+function lengthText(ms) {
+  return (Number(ms) / 1000).toFixed(1) + ' s';
+}
+
 if (typeof module !== 'undefined') {
-  module.exports = { TRACKS, STEPS, plural, recordText };
+  module.exports = { TRACKS, STEPS, plural, recordText, lengthText };
 }
 
 // ---------- 2. DOM, network ----------
@@ -57,7 +61,7 @@ if (typeof document !== 'undefined') {
 
   function render(pattern, record) {
     $('name').textContent = pattern.name;
-    $('meta').textContent = 'by ' + pattern.author + ' · ' + pattern.bpm + ' bpm · swing ' + pattern.swing + '%';
+    $('meta').textContent = 'by ' + pattern.author + ' · ' + pattern.bpm + ' bpm (' + lengthText(pattern.lengthMs) + ') · swing ' + pattern.swing + '%';
     $('score').textContent = '🔥 ' + pattern.votes + ' · rating ' + pattern.rating;
     $('record').textContent = recordText(record);
     buildGrid(pattern);
