@@ -19,14 +19,24 @@ function lengthText(ms) {
   return (Number(ms) / 1000).toFixed(1) + ' s';
 }
 
+function deltaText(entry) {
+  const delta = entry.after - entry.before;
+  return (delta >= 0 ? '+' : '') + delta;
+}
+
+function historyEntryText(entry, opponentName) {
+  return deltaText(entry) + ' vs ' + opponentName;
+}
+
 if (typeof module !== 'undefined') {
-  module.exports = { TRACKS, STEPS, plural, recordText, lengthText };
+  module.exports = { TRACKS, STEPS, plural, recordText, lengthText, deltaText, historyEntryText };
 }
 
 // ---------- 2. DOM, network ----------
 if (typeof document !== 'undefined') {
   const $ = (id) => document.getElementById(id);
   const beatId = location.pathname.split('/').filter(Boolean).pop();
+  const HISTORY_SHOWN = 5;
 
   // ----- errors -----
   function showError(msg) {
@@ -79,6 +89,51 @@ if (typeof document !== 'undefined') {
     }
   }
 
+  async function fetchHistory() {
+    try {
+      const res = await fetch('/api/patterns/' + encodeURIComponent(beatId) + '/history');
+      if (!res.ok) return [];
+      return await res.json();
+    } catch (_) {
+      return [];
+    }
+  }
+
+  async function fetchBattle(battleId) {
+    try {
+      const res = await fetch('/api/battles/' + encodeURIComponent(battleId));
+      if (!res.ok) return null;
+      return await res.json();
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function opponentName(view, id) {
+    return view.patternA.id === id ? view.patternB.name : view.patternA.name;
+  }
+
+  function historyEntry(entry, battle) {
+    const li = document.createElement('li');
+    li.textContent = historyEntryText(entry, battle ? opponentName(battle, beatId) : '?');
+    return li;
+  }
+
+  async function renderHistory() {
+    const list = $('history');
+    const entries = await fetchHistory();
+    if (entries.length === 0) {
+      const li = document.createElement('li');
+      li.className = 'empty';
+      li.textContent = 'No battle votes yet.';
+      list.replaceChildren(li);
+      return;
+    }
+    const shown = entries.slice(0, HISTORY_SHOWN);
+    const battles = await Promise.all(shown.map((e) => fetchBattle(e.battleId)));
+    list.replaceChildren(...shown.map((e, i) => historyEntry(e, battles[i])));
+  }
+
   async function load() {
     showError('');
     let res;
@@ -101,6 +156,7 @@ if (typeof document !== 'undefined') {
     const pattern = await res.json();
     const record = await fetchRecord();
     render(pattern, record);
+    renderHistory();
   }
 
   function init() {
