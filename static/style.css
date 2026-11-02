@@ -45,9 +45,9 @@ main { max-width: 860px; margin: 0 auto; padding: 12px; display: grid; gap: 14px
 .steps { display: grid; grid-template-columns: repeat(16, 48px); gap: 3px; }
 .step {
   width: 48px;
-  height: 30px;
+  height: 48px;
   min-width: 48px;
-  min-height: 30px;
+  min-height: 48px;
   padding: 0;
   background: #1d1240;
   border: 1px solid var(--line);
