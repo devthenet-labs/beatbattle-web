@@ -28,8 +28,12 @@ function historyEntryText(entry, opponentName) {
   return deltaText(entry) + ' vs ' + opponentName;
 }
 
+function hitsText(hits) {
+  return TRACKS.map((t) => t + ' ' + ((hits && hits[t]) || 0)).join(' · ');
+}
+
 if (typeof module !== 'undefined') {
-  module.exports = { TRACKS, STEPS, plural, recordText, lengthText, deltaText, historyEntryText };
+  module.exports = { TRACKS, STEPS, plural, recordText, lengthText, deltaText, historyEntryText, hitsText };
 }
 
 // ---------- 2. DOM, network ----------
@@ -77,6 +81,7 @@ if (typeof document !== 'undefined') {
     $('meta').textContent = 'by ' + pattern.author + ' · ' + pattern.bpm + ' bpm (' + lengthText(pattern.lengthMs) + ') · swing ' + pattern.swing + '%';
     $('score').textContent = '🔥 ' + pattern.votes + ' · rating ' + pattern.rating;
     $('record').textContent = recordText(record);
+    $('hits').textContent = hitsText(pattern.hits);
     buildGrid(pattern);
     $('content').hidden = false;
   }
