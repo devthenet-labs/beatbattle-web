@@ -71,6 +71,9 @@ if (typeof document !== 'undefined') {
 
   function render(pattern, record) {
     $('name').textContent = pattern.name;
+    const description = pattern.description || '';
+    $('description').textContent = description;
+    $('description').hidden = !description;
     $('meta').textContent = 'by ' + pattern.author + ' · ' + pattern.bpm + ' bpm (' + lengthText(pattern.lengthMs) + ') · swing ' + pattern.swing + '%';
     $('score').textContent = '🔥 ' + pattern.votes + ' · rating ' + pattern.rating;
     $('record').textContent = recordText(record);
