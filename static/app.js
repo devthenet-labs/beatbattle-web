@@ -140,15 +140,20 @@ if (typeof document !== 'undefined') {
   // ----- grid -----
   function buildGrid() {
     const grid = $('grid');
+    const rowLabels = document.createElement('div');
+    rowLabels.className = 'row-labels';
+    const stepsBody = document.createElement('div');
+    stepsBody.className = 'steps-body';
     for (const t of TRACKS) {
-      const row = document.createElement('div');
-      row.className = 'row';
-      row.dataset.track = t;
       const label = document.createElement('span');
       label.className = 'row-label';
+      label.dataset.track = t;
       label.textContent = t;
+      rowLabels.appendChild(label);
+
       const steps = document.createElement('div');
       steps.className = 'steps';
+      steps.dataset.track = t;
       cells[t] = [];
       for (let i = 0; i < STEPS; i++) {
         const b = document.createElement('button');
@@ -163,9 +168,12 @@ if (typeof document !== 'undefined') {
         steps.appendChild(b);
         cells[t].push(b);
       }
-      row.append(label, steps);
-      grid.appendChild(row);
+      stepsBody.appendChild(steps);
     }
+    const stepsScroll = document.createElement('div');
+    stepsScroll.className = 'steps-scroll';
+    stepsScroll.appendChild(stepsBody);
+    grid.append(rowLabels, stepsScroll);
   }
 
   function paintCell(t, i) {
