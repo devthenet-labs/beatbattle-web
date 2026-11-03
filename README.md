@@ -32,6 +32,8 @@ The shared contract is `SPEC.md` in the parent `beatbattle` directory.
 | `/battle.js`     | the head-to-head page's script                              |
 | `/beat/{id}`     | `beat.html`, one beat's own page: its grid and battle record |
 | `/beat.js`       | the beat page's script                                       |
+| `/author/{author}` | `author.html`, one author's own page: every beat by that author, each linking to its beat page |
+| `/author.js`     | the author page's script                                     |
 | `/healthz`       | `{"status":"ok","revision":"<sha>"}`                        |
 | anything else    | 404                                                          |
 
@@ -49,7 +51,11 @@ rises on the main leaderboard.
 `/beat/{id}` shows one beat's name, its description (when it has one), author, bpm (with its length next to it, e.g.
 "2.0 s"), swing, score and battle record, plus its 16-step grid read only (no play/vote controls). It calls the
 same-origin `GET /api/patterns/{id}` and `GET /api/patterns/{id}/record` endpoints documented in the api repository's
-README.
+README. The author's name links to `/author/{author}`.
+
+`/author/{author}` lists every beat saved under that author's name, each linking to its own `/beat/{id}` page; an
+author with no saved beats gets a no-beats message instead of an error. It calls the same-origin
+`GET /api/authors/{author}/patterns` endpoint documented in the api repository's README.
 
 `app.js` keeps its pure helpers (pattern to JSON and back, step timing) in a first section with no DOM access;
 `node -e 'require("./static/app.js")'` loads them.
