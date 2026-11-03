@@ -28,8 +28,12 @@ function historyEntryText(entry, opponentName) {
   return deltaText(entry) + ' vs ' + opponentName;
 }
 
+function authorPath(author) {
+  return '/author/' + encodeURIComponent(author);
+}
+
 if (typeof module !== 'undefined') {
-  module.exports = { TRACKS, STEPS, plural, recordText, lengthText, deltaText, historyEntryText };
+  module.exports = { TRACKS, STEPS, plural, recordText, lengthText, deltaText, historyEntryText, authorPath };
 }
 
 // ---------- 2. DOM, network ----------
@@ -74,7 +78,14 @@ if (typeof document !== 'undefined') {
     const description = pattern.description || '';
     $('description').textContent = description;
     $('description').hidden = !description;
-    $('meta').textContent = 'by ' + pattern.author + ' · ' + pattern.bpm + ' bpm (' + lengthText(pattern.lengthMs) + ') · swing ' + pattern.swing + '%';
+    const authorLink = document.createElement('a');
+    authorLink.href = authorPath(pattern.author);
+    authorLink.textContent = pattern.author;
+    $('meta').replaceChildren(
+      'by ',
+      authorLink,
+      ' · ' + pattern.bpm + ' bpm (' + lengthText(pattern.lengthMs) + ') · swing ' + pattern.swing + '%'
+    );
     $('score').textContent = '🔥 ' + pattern.votes + ' · rating ' + pattern.rating;
     $('record').textContent = recordText(record);
     buildGrid(pattern);
