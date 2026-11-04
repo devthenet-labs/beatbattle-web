@@ -49,7 +49,8 @@ repository's README; voting on a battle side also adds one vote to that pattern'
 rises on the main leaderboard.
 
 `/beat/{id}` shows one beat's name, its description (when it has one), author, bpm (with its length next to it, e.g.
-"2.0 s"), swing, score and battle record, plus its 16-step grid read only (no play/vote controls). It calls the
+"2.0 s"), its level (sparse, busy or groove), swing, score and battle record, plus its 16-step grid read only (no
+play/vote controls). It calls the
 same-origin `GET /api/patterns/{id}` and `GET /api/patterns/{id}/record` endpoints documented in the api repository's
 README. The author's name links to `/author/{author}`.
 

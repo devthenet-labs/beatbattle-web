@@ -84,7 +84,7 @@ if (typeof document !== 'undefined') {
     $('meta').replaceChildren(
       'by ',
       authorLink,
-      ' · ' + pattern.bpm + ' bpm (' + lengthText(pattern.lengthMs) + ') · swing ' + pattern.swing + '%'
+      ' · ' + pattern.bpm + ' bpm (' + lengthText(pattern.lengthMs) + ') · ' + pattern.level + ' · swing ' + pattern.swing + '%'
     );
     $('score').textContent = '🔥 ' + pattern.votes + ' · rating ' + pattern.rating;
     $('record').textContent = recordText(record);
