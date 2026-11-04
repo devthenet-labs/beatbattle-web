@@ -33,6 +33,7 @@ func TestHandler(t *testing.T) {
 		{"beat script", http.MethodGet, "/beat.js", http.StatusOK, "text/javascript; charset=utf-8", "Beat Battle beat page"},
 		{"beat script history helper", http.MethodGet, "/beat.js", http.StatusOK, "text/javascript; charset=utf-8", "historyEntryText"},
 		{"beat script shows length", http.MethodGet, "/beat.js", http.StatusOK, "text/javascript; charset=utf-8", "lengthText"},
+		{"beat script shows level", http.MethodGet, "/beat.js", http.StatusOK, "text/javascript; charset=utf-8", "pattern.level"},
 		{"author page", http.MethodGet, "/author/brvtl", http.StatusOK, "text/html; charset=utf-8", `<script src="/author.js"`},
 		{"author script", http.MethodGet, "/author.js", http.StatusOK, "text/javascript; charset=utf-8", "Beat Battle author page"},
 		{"readiness", http.MethodGet, "/healthz", http.StatusOK, "application/json", `"status":"ok"`},
