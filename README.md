@@ -55,7 +55,9 @@ README. The author's name links to `/author/{author}`.
 
 `/author/{author}` lists every beat saved under that author's name, each linking to its own `/beat/{id}` page; an
 author with no saved beats gets a no-beats message instead of an error. It calls the same-origin
-`GET /api/authors/{author}/patterns` endpoint documented in the api repository's README.
+`GET /api/authors/{author}/patterns` endpoint documented in the api repository's README. The page also shows the
+author's total remix count, fetched from the same-origin `GET /api/authors/{author}/remixes` endpoint documented in
+the api repository's README.
 
 `app.js` keeps its pure helpers (pattern to JSON and back, step timing) in a first section with no DOM access;
 `node -e 'require("./static/app.js")'` loads them.

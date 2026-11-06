@@ -8,8 +8,12 @@ function emptyText(author) {
   return 'No beats from ' + author + ' yet.';
 }
 
+function remixTotalText(n) {
+  return n + (n === 1 ? ' remix' : ' remixes');
+}
+
 if (typeof module !== 'undefined') {
-  module.exports = { emptyText };
+  module.exports = { emptyText, remixTotalText };
 }
 
 // ---------- 2. DOM, network ----------
@@ -54,9 +58,22 @@ if (typeof document !== 'undefined') {
   }
 
   // ----- loading -----
+  async function fetchRemixTotal() {
+    try {
+      const res = await fetch('/api/authors/' + encodeURIComponent(author) + '/remixes');
+      if (!res.ok) return { remixTotal: 0 };
+      return await res.json();
+    } catch (_) {
+      return { remixTotal: 0 };
+    }
+  }
+
   async function load() {
     showError('');
     $('name').textContent = author;
+    fetchRemixTotal().then((r) => {
+      $('remix-total').textContent = remixTotalText(r.remixTotal);
+    });
     let res;
     try {
       res = await fetch('/api/authors/' + encodeURIComponent(author) + '/patterns?limit=100');
