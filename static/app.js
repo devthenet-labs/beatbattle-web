@@ -62,9 +62,19 @@ function fromPattern(p) {
   };
 }
 
+// The meta line shown in a list row: "by <author> · <bpm> bpm", with
+// " · swing <swing>%" appended when swing is nonzero.
+function metaText(p) {
+  const { author, bpm, swing } = p;
+  let text = 'by ' + author + ' · ' + bpm + ' bpm';
+  if (swing > 0) text += ' · swing ' + swing + '%';
+  return text;
+}
+
 if (typeof module !== 'undefined') {
   module.exports = {
     TRACKS, STEPS, emptyTracks, clampBpm, clampSwing, stepSeconds, swingDelaySeconds, toPattern, fromPattern,
+    metaText,
   };
 }
 
@@ -337,7 +347,7 @@ if (typeof document !== 'undefined') {
     load.textContent = p.name;
     const meta = document.createElement('span');
     meta.className = 'meta';
-    meta.textContent = 'by ' + p.author + ' · ' + p.bpm + ' bpm';
+    meta.textContent = metaText(p);
     const votes = document.createElement('span');
     votes.className = 'votes';
     votes.textContent = '🔥 ' + p.votes;
