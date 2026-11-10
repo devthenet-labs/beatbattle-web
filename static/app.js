@@ -65,9 +65,9 @@ function fromPattern(p) {
 // The meta line shown in a list row: "by <author> · <bpm> bpm", with
 // " · swing <swing>%" appended when swing is nonzero.
 function metaText(p) {
-  const { author, bpm, swing, votes } = p;
+  const { author, bpm, swing } = p;
   let text = 'by ' + author + ' · ' + bpm + ' bpm';
-  if (swing > 0) text += ' · swing ' + votes + '%';
+  if (swing > 0) text += ' · swing ' + swing + '%';
   return text;
 }
 
