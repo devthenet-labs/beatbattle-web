@@ -62,9 +62,25 @@ function fromPattern(p) {
   };
 }
 
+// Number of pads switched on in each track (first STEPS steps only).
+function countHits(tracks) {
+  const counts = {};
+  for (const t of TRACKS) {
+    let n = 0;
+    for (let i = 0; i < STEPS; i++) if (tracks && tracks[t] && tracks[t][i] === true) n++;
+    counts[t] = n;
+  }
+  return counts;
+}
+
+// e.g. "kick 2 · snare 1 · hat 0"
+function formatCounts(counts) {
+  return TRACKS.map((t) => t + ' ' + counts[t]).join(' · ');
+}
+
 if (typeof module !== 'undefined') {
   module.exports = {
-    TRACKS, STEPS, emptyTracks, clampBpm, clampSwing, stepSeconds, swingDelaySeconds, toPattern, fromPattern,
+    countHits, formatCounts, TRACKS, STEPS, emptyTracks, clampBpm, clampSwing, stepSeconds, swingDelaySeconds, toPattern, fromPattern,
   };
 }
 
@@ -164,6 +180,7 @@ if (typeof document !== 'undefined') {
         b.addEventListener('click', () => {
           state.tracks[t][i] = !state.tracks[t][i];
           paintCell(t, i);
+          paintCounts();
         });
         steps.appendChild(b);
         cells[t].push(b);
@@ -181,8 +198,13 @@ if (typeof document !== 'undefined') {
     cells[t][i].setAttribute('aria-pressed', String(state.tracks[t][i]));
   }
 
+  function paintCounts() {
+    $('hit-counts').textContent = formatCounts(countHits(state.tracks));
+  }
+
   function paintAll() {
     for (const t of TRACKS) for (let i = 0; i < STEPS; i++) paintCell(t, i);
+    paintCounts();
   }
 
   function setBpm(bpm) {
