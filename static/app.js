@@ -185,6 +185,11 @@ if (typeof document !== 'undefined') {
     for (const t of TRACKS) for (let i = 0; i < STEPS; i++) paintCell(t, i);
   }
 
+  function clearGrid() {
+    state.tracks = emptyTracks();
+    paintAll();
+  }
+
   function setBpm(bpm) {
     state.bpm = clampBpm(bpm);
     $('bpm').value = state.bpm;
@@ -423,6 +428,7 @@ if (typeof document !== 'undefined') {
     $('swing').addEventListener('input', (e) => setSwing(e.target.value));
     $('play').addEventListener('click', play);
     $('stop').addEventListener('click', stop);
+    $('clear').addEventListener('click', clearGrid);
     $('save-form').addEventListener('submit', save);
     $('render').addEventListener('click', render);
     guarded(refresh);
