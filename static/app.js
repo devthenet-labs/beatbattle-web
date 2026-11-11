@@ -10,6 +10,9 @@ const BPM_MIN = 60;
 const BPM_MAX = 200;
 const SWING_MIN = 0;
 const SWING_MAX = 60;
+const NAME_MAX = 40;
+
+function nameCountText(name) { return String(name).length + '/' + NAME_MAX; }
 
 function emptyTracks() {
   const tracks = {};
@@ -64,7 +67,7 @@ function fromPattern(p) {
 
 if (typeof module !== 'undefined') {
   module.exports = {
-    TRACKS, STEPS, emptyTracks, clampBpm, clampSwing, stepSeconds, swingDelaySeconds, toPattern, fromPattern,
+    TRACKS, STEPS, emptyTracks, clampBpm, clampSwing, stepSeconds, swingDelaySeconds, toPattern, fromPattern, NAME_MAX, nameCountText,
   };
 }
 
@@ -210,12 +213,15 @@ if (typeof document !== 'undefined') {
     el.hidden = !info;
   }
 
+  function updateNameCount() { $('name-count').textContent = nameCountText($('name').value); }
+
   function loadPattern(p, remixOf = null) {
     const s = fromPattern(p);
     state.tracks = s.tracks;
     setBpm(s.bpm);
     setSwing(s.swing);
     $('name').value = s.name;
+    updateNameCount();
     $('author').value = s.author;
     paintAll();
     setRemixOf(remixOf);
@@ -419,6 +425,8 @@ if (typeof document !== 'undefined') {
     paintAll();
     setBpm(state.bpm);
     setSwing(state.swing);
+    $('name').addEventListener('input', updateNameCount);
+    updateNameCount();
     $('bpm').addEventListener('input', (e) => setBpm(e.target.value));
     $('swing').addEventListener('input', (e) => setSwing(e.target.value));
     $('play').addEventListener('click', play);

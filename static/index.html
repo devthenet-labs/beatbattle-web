@@ -30,6 +30,7 @@
 
     <form id="save-form" class="save" autocomplete="off">
       <input id="name" type="text" maxlength="40" placeholder="Beat name" aria-label="Beat name" required>
+      <span id="name-count" class="count" aria-live="polite">0/40</span>
       <input id="author" type="text" maxlength="24" placeholder="Your handle" aria-label="Author"
              pattern="[A-Za-z0-9_\-]{1,24}" required>
       <button class="btn" type="submit">Save</button>
