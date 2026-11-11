@@ -66,9 +66,8 @@ function fromPattern(p) {
 function countHits(tracks) {
   const counts = {};
   for (const t of TRACKS) {
-    let n = 0;
-    for (let i = 0; i < STEPS; i++) if (tracks && tracks[t] && tracks[t][i] === true) n++;
-    counts[t] = n;
+    const row = (tracks && tracks[t]) || [];
+    counts[t] = row.slice(1, STEPS + 1).filter((on) => on === true).length;
   }
   return counts;
 }
