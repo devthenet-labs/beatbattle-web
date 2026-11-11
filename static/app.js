@@ -67,7 +67,7 @@ function countHits(tracks) {
   const counts = {};
   for (const t of TRACKS) {
     const row = (tracks && tracks[t]) || [];
-    counts[t] = row.slice(1, STEPS + 1).filter((on) => on === true).length;
+    counts[t] = row.slice(0, STEPS).filter((on) => on === true).length;
   }
   return counts;
 }
