@@ -34,6 +34,16 @@ function stepSeconds(bpm) {
   return 60 / clampBpm(bpm) / 4;
 }
 
+// How long one pass of the STEPS steps takes at this BPM, in seconds (240 / BPM).
+function loopSeconds(bpm) {
+  return STEPS * stepSeconds(bpm);
+}
+
+// The loop length as shown next to the BPM control, e.g. "2.00 s".
+function loopText(bpm) {
+  return loopSeconds(bpm).toFixed(2) + ' s';
+}
+
 // How much later an odd (off-beat) step sounds, in seconds; matches the render service.
 function swingDelaySeconds(bpm, swing) {
   return stepSeconds(bpm) * clampSwing(swing) / 100;
@@ -64,7 +74,7 @@ function fromPattern(p) {
 
 if (typeof module !== 'undefined') {
   module.exports = {
-    TRACKS, STEPS, emptyTracks, clampBpm, clampSwing, stepSeconds, swingDelaySeconds, toPattern, fromPattern,
+    TRACKS, STEPS, emptyTracks, clampBpm, clampSwing, stepSeconds, loopSeconds, loopText, swingDelaySeconds, toPattern, fromPattern,
   };
 }
 
@@ -189,6 +199,7 @@ if (typeof document !== 'undefined') {
     state.bpm = clampBpm(bpm);
     $('bpm').value = state.bpm;
     $('bpm-out').textContent = state.bpm;
+    $('loop-out').textContent = loopText(state.bpm);
   }
 
   function setSwing(swing) {
