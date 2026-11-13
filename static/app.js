@@ -88,6 +88,12 @@ if (typeof document !== 'undefined') {
     el.hidden = !msg;
   }
 
+  function showSaved(name) {
+    const el = $('saved');
+    el.textContent = 'Saved: ' + name;
+    el.hidden = false;
+  }
+
   // A stable id for this browser, sent as X-Client-Id so the api can
   // rate-limit votes per client; kept in localStorage across reloads.
   function clientId() {
@@ -387,6 +393,7 @@ if (typeof document !== 'undefined') {
   async function save(ev) {
     ev.preventDefault();
     await guarded(async () => {
+      const name = $('name').value.trim();
       if (state.remixOf) {
         await call('POST', '/api/patterns/' + encodeURIComponent(state.remixOf.id) + '/remix', {
           name: $('name').value.trim(), author: $('author').value.trim(),
@@ -394,6 +401,7 @@ if (typeof document !== 'undefined') {
       } else {
         await call('POST', '/api/patterns', currentPattern());
       }
+      showSaved(name);
       setRemixOf(null);
       await refresh();
     });
