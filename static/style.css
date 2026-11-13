@@ -121,3 +121,8 @@ ol.list li::before { counter-increment: rank; content: counter(rank) "."; color:
   .panel { padding: 10px; }
   .versus { grid-template-columns: 1fr; }
 }
+
+.loop {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
