@@ -95,7 +95,7 @@ main { max-width: 860px; margin: 0 auto; padding: 12px; display: grid; gap: 14px
 .btn:disabled { opacity: .5; cursor: wait; }
 
 #remix-of { margin: 10px 0 0; opacity: .8; }
-.saved { margin: 10px 0 0; color: var(--lime); font-weight: 600; overflow-wrap: anywhere; }
+.saved { margin: 10px 0 0; color: var(--line); font-weight: 600; overflow-wrap: anywhere; }
 .saved[hidden] { display: none; }
 .error { margin: 10px 0 0; padding: 8px 10px; border: 1px solid #ff4d6d; border-radius: 8px; color: #ff9aae; background: #3a0d1c; }
 .error[hidden], .render-out[hidden] { display: none; }

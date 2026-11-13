@@ -17,7 +17,7 @@ func fetchStatic(t *testing.T, path string) string {
 	return rec.Body.String()
 }
 
-// TestSavedLine guards the "Saved: <name>" line under the save form.
+// TestSavedLine checks the "Saved: <name>" line under the save form.
 func TestSavedLine(t *testing.T) {
 	html := fetchStatic(t, "/")
 	i := strings.Index(html, `id="saved"`)
