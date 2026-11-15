@@ -67,6 +67,8 @@ main { max-width: 860px; margin: 0 auto; padding: 12px; display: grid; gap: 14px
 .controls, .save { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 12px; }
 .bpm { display: flex; align-items: center; gap: 8px; flex: 1 1 200px; }
 .bpm input { flex: 1; accent-color: var(--neon); }
+.presets { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.btn.preset[aria-pressed="true"] { background: var(--cyan); color: var(--bg); box-shadow: 0 0 12px var(--cyan); }
 .save input[type=text] {
   flex: 1 1 140px;
   min-width: 0;

@@ -24,3 +24,25 @@ func TestStepPadsAreDrumPadSized(t *testing.T) {
 		}
 	}
 }
+
+// TestSwingPresetMarkup guards the Swing preset buttons, their JS helper and
+// the pressed-state style.
+func TestSwingPresetMarkup(t *testing.T) {
+	handler := newHandler("x")
+	for path, wants := range map[string][]string{
+		"/":          {`id="swing-presets"`, `aria-pressed="false">Straight`, `aria-pressed="false">Light`, `aria-pressed="false">Heavy`},
+		"/app.js":    {"swingPresetFor"},
+		"/style.css": {`.btn.preset[aria-pressed="true"]`},
+	} {
+		rec := httptest.NewRecorder()
+		handler.ServeHTTP(rec, httptest.NewRequest(http.MethodGet, path, nil))
+		if rec.Code != http.StatusOK {
+			t.Fatalf("%s = %d, want %d", path, rec.Code, http.StatusOK)
+		}
+		for _, want := range wants {
+			if !strings.Contains(rec.Body.String(), want) {
+				t.Errorf("%s lacks %q", path, want)
+			}
+		}
+	}
+}

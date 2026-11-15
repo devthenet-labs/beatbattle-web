@@ -35,6 +35,19 @@ function stepSeconds(bpm) {
 }
 
 // How much later an odd (off-beat) step sounds, in seconds; matches the render service.
+const SWING_PRESETS = [
+  { id: 'straight', label: 'Straight', value: 0 },
+  { id: 'light', label: 'Light', value: 20 },
+  { id: 'heavy', label: 'Heavy', value: 45 },
+];
+
+// swingPresetFor returns the value of the preset matching swing, or null.
+function swingPresetFor(swing) {
+  const v = clampSwing(swing);
+  const p = SWING_PRESETS.find((x) => x.value === v);
+  return p ? p.value : null;
+}
+
 function swingDelaySeconds(bpm, swing) {
   return stepSeconds(bpm) * clampSwing(swing) / 100;
 }
@@ -64,7 +77,7 @@ function fromPattern(p) {
 
 if (typeof module !== 'undefined') {
   module.exports = {
-    TRACKS, STEPS, emptyTracks, clampBpm, clampSwing, stepSeconds, swingDelaySeconds, toPattern, fromPattern,
+    TRACKS, STEPS, emptyTracks, clampBpm, clampSwing, stepSeconds, swingDelaySeconds, toPattern, fromPattern, SWING_PRESETS, swingPresetFor,
   };
 }
 
@@ -191,10 +204,17 @@ if (typeof document !== 'undefined') {
     $('bpm-out').textContent = state.bpm;
   }
 
+  function paintPresets() {
+    document.querySelectorAll('#swing-presets button').forEach((btn) => {
+      btn.setAttribute('aria-pressed', String(swingPresetFor(state.swing) === Number(btn.dataset.swing)));
+    });
+  }
+
   function setSwing(swing) {
     state.swing = clampSwing(swing);
     $('swing').value = state.swing;
     $('swing-out').textContent = state.swing;
+    paintPresets();
   }
 
   function currentPattern() {
@@ -421,6 +441,9 @@ if (typeof document !== 'undefined') {
     setSwing(state.swing);
     $('bpm').addEventListener('input', (e) => setBpm(e.target.value));
     $('swing').addEventListener('input', (e) => setSwing(e.target.value));
+    document.querySelectorAll('#swing-presets button').forEach((btn) => {
+      btn.addEventListener('click', () => setSwing(Number(btn.dataset.swing)));
+    });
     $('play').addEventListener('click', play);
     $('stop').addEventListener('click', stop);
     $('save-form').addEventListener('submit', save);
