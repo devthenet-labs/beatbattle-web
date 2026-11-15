@@ -29,6 +29,14 @@ function clampSwing(swing) {
   return Math.min(SWING_MAX, Math.max(SWING_MIN, n));
 }
 
+// One word for the tempo: slow below 90 BPM, fast from 130, medium between.
+function tempoWord(bpm) {
+  const n = clampBpm(bpm);
+  if (n < 90) return 'slow';
+  if (n >= 130) return 'fast';
+  return 'medium';
+}
+
 // Seconds per sixteenth-note step; matches the render service (60 / bpm / 4).
 function stepSeconds(bpm) {
   return 60 / clampBpm(bpm) / 4;
@@ -64,7 +72,7 @@ function fromPattern(p) {
 
 if (typeof module !== 'undefined') {
   module.exports = {
-    TRACKS, STEPS, emptyTracks, clampBpm, clampSwing, stepSeconds, swingDelaySeconds, toPattern, fromPattern,
+    TRACKS, STEPS, emptyTracks, clampBpm, clampSwing, tempoWord, stepSeconds, swingDelaySeconds, toPattern, fromPattern,
   };
 }
 
@@ -189,6 +197,7 @@ if (typeof document !== 'undefined') {
     state.bpm = clampBpm(bpm);
     $('bpm').value = state.bpm;
     $('bpm-out').textContent = state.bpm;
+    $('tempo-out').textContent = tempoWord(state.bpm);
   }
 
   function setSwing(swing) {
