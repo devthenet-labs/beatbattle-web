@@ -116,3 +116,30 @@ func TestNoInlineScriptOrStyle(t *testing.T) {
 		})
 	}
 }
+
+// TestTempoButtons checks the Half/Double buttons are placed between the BPM
+// and Swing sliders and that the script wires them up.
+func TestTempoButtons(t *testing.T) {
+	get := func(path string) string {
+		rec := httptest.NewRecorder()
+		newHandler("x").ServeHTTP(rec, httptest.NewRequest(http.MethodGet, path, nil))
+		return rec.Body.String()
+	}
+	page := get("/")
+	bpm := strings.Index(page, `id="bpm"`)
+	half := strings.Index(page, `id="bpm-half"`)
+	double := strings.Index(page, `id="bpm-double"`)
+	swing := strings.Index(page, `id="swing"`)
+	if bpm < 0 || half < 0 || double < 0 || swing < 0 {
+		t.Fatalf("missing ids: bpm=%d half=%d double=%d swing=%d", bpm, half, double, swing)
+	}
+	if !(bpm < half && half < swing && bpm < double && double < swing) {
+		t.Errorf("tempo buttons not between bpm and swing: %d %d %d %d", bpm, half, double, swing)
+	}
+	js := get("/app.js")
+	for _, want := range []string{"doubleBpm", "halfBpm", "bpm-half", "bpm-double"} {
+		if !strings.Contains(js, want) {
+			t.Errorf("app.js lacks %q", want)
+		}
+	}
+}

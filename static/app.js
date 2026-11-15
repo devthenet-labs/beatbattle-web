@@ -23,6 +23,10 @@ function clampBpm(bpm) {
   return Math.min(BPM_MAX, Math.max(BPM_MIN, n));
 }
 
+function doubleBpm(bpm) { return clampBpm(clampBpm(bpm) * 2); }
+
+function halfBpm(bpm) { return clampBpm(Math.floor(clampBpm(bpm) / 2)); }
+
 function clampSwing(swing) {
   const n = Math.round(Number(swing));
   if (!Number.isFinite(n)) return 0;
@@ -64,7 +68,7 @@ function fromPattern(p) {
 
 if (typeof module !== 'undefined') {
   module.exports = {
-    TRACKS, STEPS, emptyTracks, clampBpm, clampSwing, stepSeconds, swingDelaySeconds, toPattern, fromPattern,
+    TRACKS, STEPS, emptyTracks, clampBpm, doubleBpm, halfBpm, clampSwing, stepSeconds, swingDelaySeconds, toPattern, fromPattern,
   };
 }
 
@@ -189,6 +193,8 @@ if (typeof document !== 'undefined') {
     state.bpm = clampBpm(bpm);
     $('bpm').value = state.bpm;
     $('bpm-out').textContent = state.bpm;
+    $('bpm-half').disabled = state.bpm <= BPM_MIN;
+    $('bpm-double').disabled = state.bpm >= BPM_MAX;
   }
 
   function setSwing(swing) {
@@ -420,6 +426,8 @@ if (typeof document !== 'undefined') {
     setBpm(state.bpm);
     setSwing(state.swing);
     $('bpm').addEventListener('input', (e) => setBpm(e.target.value));
+    $('bpm-half').addEventListener('click', () => setBpm(halfBpm(state.bpm)));
+    $('bpm-double').addEventListener('click', () => setBpm(doubleBpm(state.bpm)));
     $('swing').addEventListener('input', (e) => setSwing(e.target.value));
     $('play').addEventListener('click', play);
     $('stop').addEventListener('click', stop);
