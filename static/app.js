@@ -210,6 +210,12 @@ if (typeof document !== 'undefined') {
     el.hidden = !info;
   }
 
+  function setLoaded(info) {
+    const el = $('loaded');
+    el.textContent = info ? 'Loaded: ' + info.name + ' by ' + info.author : '';
+    el.hidden = !info;
+  }
+
   function loadPattern(p, remixOf = null) {
     const s = fromPattern(p);
     state.tracks = s.tracks;
@@ -218,6 +224,7 @@ if (typeof document !== 'undefined') {
     $('name').value = s.name;
     $('author').value = s.author;
     paintAll();
+    setLoaded({ name: s.name, author: s.author });
     setRemixOf(remixOf);
   }
 
