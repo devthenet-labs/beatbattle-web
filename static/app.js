@@ -17,6 +17,16 @@ function emptyTracks() {
   return tracks;
 }
 
+function shiftTracks(tracks, delta) {
+  const out = emptyTracks();
+  for (const t of TRACKS) {
+    for (let i = 0; i < STEPS; i++) {
+      out[t][(((i + delta) % STEPS) + STEPS) % STEPS] = Boolean(tracks[t] && tracks[t][i]);
+    }
+  }
+  return out;
+}
+
 function clampBpm(bpm) {
   const n = Math.round(Number(bpm));
   if (!Number.isFinite(n)) return 120;
@@ -64,7 +74,7 @@ function fromPattern(p) {
 
 if (typeof module !== 'undefined') {
   module.exports = {
-    TRACKS, STEPS, emptyTracks, clampBpm, clampSwing, stepSeconds, swingDelaySeconds, toPattern, fromPattern,
+    TRACKS, STEPS, emptyTracks, shiftTracks, clampBpm, clampSwing, stepSeconds, swingDelaySeconds, toPattern, fromPattern,
   };
 }
 
@@ -183,6 +193,12 @@ if (typeof document !== 'undefined') {
 
   function paintAll() {
     for (const t of TRACKS) for (let i = 0; i < STEPS; i++) paintCell(t, i);
+  }
+
+  function shift(delta) {
+    state.tracks = shiftTracks(state.tracks, delta);
+    if (state.remixOf) setRemixOf(null);
+    paintAll();
   }
 
   function setBpm(bpm) {
@@ -423,6 +439,8 @@ if (typeof document !== 'undefined') {
     $('swing').addEventListener('input', (e) => setSwing(e.target.value));
     $('play').addEventListener('click', play);
     $('stop').addEventListener('click', stop);
+    $('shift-left').addEventListener('click', () => shift(-1));
+    $('shift-right').addEventListener('click', () => shift(1));
     $('save-form').addEventListener('submit', save);
     $('render').addEventListener('click', render);
     guarded(refresh);

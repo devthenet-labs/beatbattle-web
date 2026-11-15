@@ -89,6 +89,7 @@ main { max-width: 860px; margin: 0 auto; padding: 12px; display: grid; gap: 14px
   cursor: pointer;
   box-shadow: 0 0 8px #19f3ff55;
 }
+.controls .btn { flex: 0 0 auto; white-space: nowrap; }
 .btn:hover { background: #19f3ff22; }
 .btn.go { color: var(--lime); border-color: var(--lime); box-shadow: 0 0 8px #b6ff2b55; }
 .btn.alt { color: var(--neon); border-color: var(--neon); box-shadow: 0 0 8px #ff2bd655; }
