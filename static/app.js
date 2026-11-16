@@ -62,9 +62,23 @@ function fromPattern(p) {
   };
 }
 
+// parseEvery: whole number 1..STEPS from a raw field value, else null.
+function parseEvery(raw) {
+  const s = String(raw).trim();
+  if (!/^[0-9]+$/.test(s)) return null;
+  const n = Number(s);
+  return n >= 1 && n <= STEPS ? n : null;
+}
+
+// fillSteps: a track with every Nth step on, starting at step 1.
+function fillSteps(every) {
+  return Array.from({ length: STEPS }, (_, i) => i % every === 0);
+}
+
 if (typeof module !== 'undefined') {
   module.exports = {
     TRACKS, STEPS, emptyTracks, clampBpm, clampSwing, stepSeconds, swingDelaySeconds, toPattern, fromPattern,
+    parseEvery, fillSteps,
   };
 }
 
@@ -183,6 +197,17 @@ if (typeof document !== 'undefined') {
 
   function paintAll() {
     for (const t of TRACKS) for (let i = 0; i < STEPS; i++) paintCell(t, i);
+  }
+
+  function fillTrack(t) {
+    const n = parseEvery($('every').value);
+    if (n === null) {
+      showError('Every must be a whole number from 1 to 16');
+      return;
+    }
+    showError('');
+    state.tracks[t] = fillSteps(n);
+    for (let i = 0; i < STEPS; i++) paintCell(t, i);
   }
 
   function setBpm(bpm) {
@@ -421,6 +446,9 @@ if (typeof document !== 'undefined') {
     setSwing(state.swing);
     $('bpm').addEventListener('input', (e) => setBpm(e.target.value));
     $('swing').addEventListener('input', (e) => setSwing(e.target.value));
+    for (const btn of document.querySelectorAll('.fill')) {
+      btn.addEventListener('click', () => fillTrack(btn.dataset.track));
+    }
     $('play').addEventListener('click', play);
     $('stop').addEventListener('click', stop);
     $('save-form').addEventListener('submit', save);

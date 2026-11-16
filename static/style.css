@@ -121,3 +121,5 @@ ol.list li::before { counter-increment: rank; content: counter(rank) "."; color:
   .panel { padding: 10px; }
   .versus { grid-template-columns: 1fr; }
 }
+.every { display: flex; align-items: center; gap: 8px; }
+.every input { width: 4.5rem; background: #0d0720; color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 9px 10px; font: inherit; }
