@@ -121,4 +121,4 @@ ol.list li::before { counter-increment: rank; content: counter(rank) "."; color:
   .panel { padding: 10px; }
   .versus { grid-template-columns: 1fr; }
 }
-.busiest { margin: 10px 0 0; color: var(--text); font-weight: 600; }
+.busiest { margin: 10px 0 0; height: 0; overflow: hidden; color: var(--text); font-weight: 600; }
