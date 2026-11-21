@@ -62,9 +62,23 @@ function fromPattern(p) {
   };
 }
 
+function busiestTrack(tracks) {
+  let best = null, bestN = 0;
+  for (const t of TRACKS) {
+    const n = (tracks && tracks[t] ? tracks[t] : []).filter((v) => v === true).length;
+    if (n > bestN) { best = t; bestN = n; }
+  }
+  return best ? { track: best, count: bestN } : null;
+}
+
+function busiestText(tracks) {
+  const b = busiestTrack(tracks);
+  return b ? 'Busiest: ' + b.track + ' (' + b.count + ')' : 'Busiest: none';
+}
+
 if (typeof module !== 'undefined') {
   module.exports = {
-    TRACKS, STEPS, emptyTracks, clampBpm, clampSwing, stepSeconds, swingDelaySeconds, toPattern, fromPattern,
+    busiestTrack, busiestText, TRACKS, STEPS, emptyTracks, clampBpm, clampSwing, stepSeconds, swingDelaySeconds, toPattern, fromPattern,
   };
 }
 
@@ -164,6 +178,7 @@ if (typeof document !== 'undefined') {
         b.addEventListener('click', () => {
           state.tracks[t][i] = !state.tracks[t][i];
           paintCell(t, i);
+          paintBusiest();
         });
         steps.appendChild(b);
         cells[t].push(b);
@@ -181,8 +196,13 @@ if (typeof document !== 'undefined') {
     cells[t][i].setAttribute('aria-pressed', String(state.tracks[t][i]));
   }
 
+  function paintBusiest() {
+    $('busiest').textContent = busiestText(state.tracks);
+  }
+
   function paintAll() {
     for (const t of TRACKS) for (let i = 0; i < STEPS; i++) paintCell(t, i);
+    paintBusiest();
   }
 
   function setBpm(bpm) {
