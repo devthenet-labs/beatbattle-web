@@ -62,9 +62,20 @@ function fromPattern(p) {
   };
 }
 
+// The track with the most lit pads; ties go to the earlier track in TRACKS.
+function busiestText(tracks) {
+  let best = null;
+  let max = 0;
+  for (const t of TRACKS) {
+    const n = ((tracks && tracks[t]) || []).filter((v) => v === true).length;
+    if (n > max) { max = n; best = t; }
+  }
+  return best ? 'Busiest: ' + best + ' (' + max + ')' : 'Busiest: none';
+}
+
 if (typeof module !== 'undefined') {
   module.exports = {
-    TRACKS, STEPS, emptyTracks, clampBpm, clampSwing, stepSeconds, swingDelaySeconds, toPattern, fromPattern,
+    TRACKS, STEPS, emptyTracks, clampBpm, clampSwing, stepSeconds, swingDelaySeconds, toPattern, fromPattern, busiestText,
   };
 }
 
@@ -164,6 +175,7 @@ if (typeof document !== 'undefined') {
         b.addEventListener('click', () => {
           state.tracks[t][i] = !state.tracks[t][i];
           paintCell(t, i);
+          paintBusiest();
         });
         steps.appendChild(b);
         cells[t].push(b);
@@ -181,8 +193,13 @@ if (typeof document !== 'undefined') {
     cells[t][i].setAttribute('aria-pressed', String(state.tracks[t][i]));
   }
 
+  function paintBusiest() {
+    $('busiest').textContent = busiestText(state.tracks);
+  }
+
   function paintAll() {
     for (const t of TRACKS) for (let i = 0; i < STEPS; i++) paintCell(t, i);
+    paintBusiest();
   }
 
   function setBpm(bpm) {
